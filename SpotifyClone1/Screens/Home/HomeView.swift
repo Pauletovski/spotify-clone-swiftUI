@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-struct PlaylistInfo: Hashable {
-    let image: String
-    let description: String
-}
-
-
-struct SongInfo: Hashable {
-    let songName: String
-    let singerName: String
-    let image: String
-}
 struct HomeScreenView: View {
     
     @State var songsInfo: [SongInfo] = [

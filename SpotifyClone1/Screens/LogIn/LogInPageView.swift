@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LogInPageView: View {
     
@@ -102,7 +103,7 @@ struct LogInPageView: View {
 
     var logInButton: some View {
         Button {
-            viewModel.isLoggedIn = true
+            viewModel.onLoggedIn.send()
         } label: {
             Text("Log in")
                 .font(.title3)
@@ -119,6 +120,6 @@ struct LoginButtons: Hashable {
 
 struct LogInPageView_Previews: PreviewProvider {
     static var previews: some View {
-        LogInPageView(viewModel: LogInPageViewModel())
+        LogInPageView(viewModel: LogInPageViewModel(coordinator: Coordinator(navigationController: UINavigationController())))
     }
 }

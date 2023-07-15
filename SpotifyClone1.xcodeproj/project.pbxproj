@@ -22,6 +22,8 @@
 		E0FFD3612A623F3800115D9D /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFD3602A623F3800115D9D /* PlaylistView.swift */; };
 		E0FFD3642A623F4800115D9D /* MusicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFD3632A623F4800115D9D /* MusicView.swift */; };
 		E0FFD3802A62FFF800115D9D /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFD37F2A62FFF800115D9D /* Coordinator.swift */; };
+		E0FFD3832A630B0200115D9D /* SongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFD3822A630B0200115D9D /* SongInfo.swift */; };
+		E0FFD3852A630B1300115D9D /* PlaylistInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FFD3842A630B1300115D9D /* PlaylistInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		E0FFD3602A623F3800115D9D /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		E0FFD3632A623F4800115D9D /* MusicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicView.swift; sourceTree = "<group>"; };
 		E0FFD37F2A62FFF800115D9D /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		E0FFD3822A630B0200115D9D /* SongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongInfo.swift; sourceTree = "<group>"; };
+		E0FFD3842A630B1300115D9D /* PlaylistInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,9 +79,10 @@
 			isa = PBXGroup;
 			children = (
 				E0FFD37F2A62FFF800115D9D /* Coordinator.swift */,
+				E0FFD34B2A623DC700115D9D /* Screens */,
+				E0FFD3812A630ADD00115D9D /* Models */,
 				E0FFD3532A623E4C00115D9D /* Extensions */,
 				E0FFD3502A623E0700115D9D /* Components */,
-				E0FFD34B2A623DC700115D9D /* Screens */,
 				E0FFD3372A623DB800115D9D /* AppDelegate.swift */,
 				E0FFD3392A623DB800115D9D /* SceneDelegate.swift */,
 				E0FFD33B2A623DB800115D9D /* ViewController.swift */,
@@ -158,6 +163,15 @@
 			path = Music;
 			sourceTree = "<group>";
 		};
+		E0FFD3812A630ADD00115D9D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E0FFD3822A630B0200115D9D /* SongInfo.swift */,
+				E0FFD3842A630B1300115D9D /* PlaylistInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -230,8 +244,10 @@
 			files = (
 				E0FFD34F2A623DE500115D9D /* SearchView.swift in Sources */,
 				E0FFD3572A623E7200115D9D /* HomeView.swift in Sources */,
+				E0FFD3832A630B0200115D9D /* SongInfo.swift in Sources */,
 				E0FFD3802A62FFF800115D9D /* Coordinator.swift in Sources */,
 				E0FFD3522A623E1A00115D9D /* SearchTextfield.swift in Sources */,
+				E0FFD3852A630B1300115D9D /* PlaylistInfo.swift in Sources */,
 				E0FFD33C2A623DB800115D9D /* ViewController.swift in Sources */,
 				E0FFD35C2A623ECD00115D9D /* LogInPageViewModel.swift in Sources */,
 				E0FFD3612A623F3800115D9D /* PlaylistView.swift in Sources */,

@@ -5,7 +5,8 @@
 //  Created by Paulo Lazarini on 14/07/23.
 //
 
-import Foundation
+import SwiftUI
+import Combine
 
 class LogInPageViewModel: ObservableObject {
     @Published var loginButtons: [LoginButtons] = [
@@ -15,5 +16,22 @@ class LogInPageViewModel: ObservableObject {
         LoginButtons(name: "Continue with Facebook", image: "facebookLogo")
     ]
     
-    @Published var isLoggedIn: Bool = false
+    let onLoggedIn = PassthroughSubject<Void, Never>()
+    
+    var cancelSet = Set<AnyCancellable>()
+    
+    private var coordinator: Coordinator
+    
+    init(coordinator: Coordinator) {
+        self.coordinator = coordinator
+        
+        onLoggedIn
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                coordinator.showTabBar()
+            }.store(in: &cancelSet)
+    }
+    
+
 }

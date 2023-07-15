@@ -8,7 +8,6 @@
 import UIKit
 import SwiftUI
 import Combine
-//import Moya
 
 class Coordinator {
 
@@ -19,20 +18,15 @@ class Coordinator {
     
     let tabBarController = UITabBarController()
     
-    var cancelSet = Set<AnyCancellable>()
+    private var cancelSet = Set<AnyCancellable>()
     
-    
-    lazy var logInPageViewModel: LogInPageViewModel = LogInPageViewModel()
+    var logInPageViewModel: LogInPageViewModel?
     
     func start() {
-        let view = LogInPageView(viewModel: logInPageViewModel)
+        logInPageViewModel = LogInPageViewModel(coordinator: self)
+        let view = LogInPageView(viewModel: logInPageViewModel!)
         
         pushVC(view)
-        
-        sleep(2)
-        
-        
-        showTabBar()
     }
     
     func showTabBar() {
@@ -46,7 +40,8 @@ class Coordinator {
         searchViewController.tabBarItem = secondTabBarItem
         yourLibraryViewController.tabBarItem = thirdTabBarItem
 
-        tabBarController.tabBar.backgroundColor = .black
+        UITabBar.appearance().barTintColor = UIColor.black
+        tabBarController.tabBar.isTranslucent = false
         tabBarController.viewControllers = [homeViewController, searchViewController, yourLibraryViewController]
         navigationController.setViewControllers([tabBarController], animated: false)
     }
