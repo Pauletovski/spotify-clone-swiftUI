@@ -20,18 +20,6 @@ class LogInPageViewModel: ObservableObject {
     
     var cancelSet = Set<AnyCancellable>()
     
-    private var coordinator: Coordinator
+    init() { }
     
-    init(coordinator: Coordinator) {
-        self.coordinator = coordinator
-        
-        onLoggedIn
-            .sink { [weak self] _ in
-                guard let self else { return }
-                
-                coordinator.showTabBar()
-            }.store(in: &cancelSet)
-    }
-    
-
 }

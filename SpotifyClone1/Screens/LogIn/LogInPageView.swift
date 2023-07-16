@@ -120,6 +120,6 @@ struct LoginButtons: Hashable {
 
 struct LogInPageView_Previews: PreviewProvider {
     static var previews: some View {
-        LogInPageView(viewModel: LogInPageViewModel(coordinator: Coordinator(navigationController: UINavigationController())))
+        LogInPageView(viewModel: LogInPageViewModel())
     }
 }
