@@ -19,7 +19,7 @@ struct MusicView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.boxgray.ignoresSafeArea()
             
             VStack {
                 buildHeader

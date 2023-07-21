@@ -10,13 +10,15 @@ import SwiftUI
 struct PlaylistView: View {
     
     let playlist: Playlist
+    let randomInt = Int.random(in: 1..<1000000)
     
     @ObservedObject var viewModel: PlaylistViewModel
+    @ObservedObject var musicViewModel: MusicViewModel
     @State var index = 0
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.boxgray.ignoresSafeArea()
             
             VStack(alignment: .leading) {
                 ScrollView {
@@ -35,6 +37,13 @@ struct PlaylistView: View {
             }
             .padding(.horizontal, 16)
         }
+        .overlay(alignment: .bottom) {
+            if viewModel.album != nil {
+                MusicPlayingView(viewModel: musicViewModel,
+                                 album: $viewModel.album,
+                                 passtrough: viewModel.onEvent)
+            }
+        }
     }
     
     func songs(albums: [Album]) -> some View {
@@ -45,7 +54,7 @@ struct PlaylistView: View {
     
     func song(album: Album) -> some View {
         Button {
-            viewModel.onEvent.send(.presentMusicDetails(album))
+            viewModel.onEvent.send(.selectSong(album))
         } label: {
             HStack {
                 Image(album.img)
@@ -126,7 +135,7 @@ struct PlaylistView: View {
     
     var playlistLikes: some View {
         HStack {
-            Text("\(Int.random(in: 1..<1000000)) likes.")
+            Text("\(randomInt) likes.")
                 .foregroundStyle(.gray)
                 .font(.system(size: 14))
             
@@ -198,5 +207,5 @@ struct PlaylistView: View {
 }
 
 #Preview {
-    PlaylistView(playlist: playlists[0], viewModel: PlaylistViewModel())
+    PlaylistView(playlist: playlists[0], viewModel: PlaylistViewModel(), musicViewModel: MusicViewModel(album: albums.first!))
 }

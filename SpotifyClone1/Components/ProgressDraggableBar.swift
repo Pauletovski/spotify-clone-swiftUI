@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct ProgressDraggableBar: View {
-    @State var isDragging: Bool = false
+    @State var isDragging: Bool = true
     @State var screenWidth: CGFloat = 0.0
     
     @Binding var progressWidth: CGFloat
@@ -41,7 +41,7 @@ struct ProgressDraggableBar: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.boxgray.ignoresSafeArea()
             
             VStack {
                 progressBar
@@ -80,8 +80,8 @@ struct ProgressDraggableBar: View {
     }
     
     func turnIntIntoMinute(_ int: Int) -> String {
-        var minutes: Int = int / 60
-        var seconds: Int = int % 60
+        let minutes: Int = int / 60
+        let seconds: Int = int % 60
         
         if seconds < 0 {
             return "00:00"

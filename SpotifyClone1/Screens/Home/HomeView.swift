@@ -10,32 +10,39 @@ import SwiftUI
 struct HomeScreenView: View {
     
     @ObservedObject var viewModel: HomeViewModel
-    
-    let album: [Album]
-    let playlist: [Playlist]
+    @ObservedObject var musicViewModel: MusicViewModel
 
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.boxgray.ignoresSafeArea()
             
             VStack {
                 header
                 
                 ScrollView(.vertical, showsIndicators: true) {
                     VStack(spacing: 45) {
-                        playlistRecomendations(playlistsInfo: playlist)
+                        playlistRecomendations(playlistsInfo: viewModel.playlist)
                             
-                        trendingNowView(songsInfo: album)
+                        trendingNowView(songsInfo: albums)
                             
-                        topPicksView(playlistsInfo: playlist)
+                        topPicksView(playlistsInfo: viewModel.playlist)
                     }
                     .padding(.bottom, 45)
                 }
             }
             .padding(.horizontal, 10)
         }
+        .overlay(alignment: .bottom) {
+            if viewModel.album != nil {
+                MusicPlayingView(viewModel: musicViewModel,
+                                 album: $viewModel.album,
+                                 passtrough: viewModel.onEvent)
+                .padding(.vertical, 5)
+            }
+        }
+
     }
     
     func subtitle(_ text: String) -> some View {
@@ -159,6 +166,6 @@ struct HomeScreenView: View {
 
 struct HomeScreenView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeScreenView(viewModel: HomeViewModel(), album: albums, playlist: playlists)
+        HomeScreenView(viewModel: HomeViewModel(playlist: playlists), musicViewModel: MusicViewModel(album: albums.first!))
     }
 }

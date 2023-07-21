@@ -20,13 +20,38 @@ class Coordinator {
                 
                 self?.presentPlaylist(playlist: playlist)
             }.store(in: &cancelSet)
+        
+        self.homeViewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .presentMusicDetails:
+                    self?.presentMusic()
+                default:
+                    return
+                }
+            }.store(in: &cancelSet)
+        
+        self.searchViewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .presentMusicDetails:
+                    self?.presentMusic()
+                default:
+                    return
+                }
+            }.store(in: &cancelSet)
     }
+    
+    var album: Album?
     
     let tabBarController = UITabBarController()
     
     private var cancelSet = Set<AnyCancellable>()
     
-    let homeViewModel = HomeViewModel()
+    var homeViewModel = HomeViewModel(playlist: playlists)
+    var playlistViewModel = PlaylistViewModel()
+    var searchViewModel = SearchViewModel()
+    var musicViewModel = MusicViewModel(album: albums.first!)
     
     func start() {
         let viewModel = LogInPageViewModel()
@@ -48,10 +73,14 @@ class Coordinator {
         let thirdTabBarItem = UITabBarItem(title: "Your Library", image: UIImage(systemName: "books.vertical"), tag: 2)
         
         let homeViewController = UIHostingController(rootView: HomeScreenView(viewModel: homeViewModel,
-                                                                              album: albums,
-                                                                              playlist: playlists))
+                                                                              musicViewModel: musicViewModel))
         
-        let searchViewController = UIHostingController(rootView: SearchScreenView())
+        if let album = homeViewModel.album {
+            playlistViewModel.album = album
+        }
+        
+        let searchViewController = UIHostingController(rootView: SearchScreenView(musicViewModel: musicViewModel,
+                                                                                  viewModel: searchViewModel))
         
         let yourLibraryViewController = UIHostingController(rootView: EmptyView())
         
@@ -59,33 +88,60 @@ class Coordinator {
         searchViewController.tabBarItem = secondTabBarItem
         yourLibraryViewController.tabBarItem = thirdTabBarItem
 
-        UITabBar.appearance().barTintColor = UIColor.black
+        UITabBar.appearance().barTintColor = UIColor.boxgray
+        tabBarController.tabBar.backgroundColor = UIColor.boxgray
         tabBarController.tabBar.isTranslucent = false
+        tabBarController.tabBar.tintColor = .white
         tabBarController.viewControllers = [homeViewController, searchViewController, yourLibraryViewController]
         navigationController.setViewControllers([tabBarController], animated: false)
     }
     
     func presentPlaylist(playlist: Playlist) {
-        let viewModel = PlaylistViewModel()
         navigationController.navigationBar.isHidden = true
-        pushVC(PlaylistView(playlist: playlist, viewModel: viewModel))
+        pushVC(PlaylistView(playlist: playlist, viewModel: playlistViewModel, musicViewModel: musicViewModel))
         
-        viewModel.onEvent
+        playlistViewModel.onEvent
             .sink { [weak self] event in
                 switch event {
                 case .onDismiss:
                     self?.popVC()
-                case .presentMusicDetails(let album):
-                    self?.presentMusic(album: album)
+                case .presentMusicDetails(_):
+                    self?.presentMusic()
+                case .selectSong(let album):
+                    self?.musicViewModel.album = album
+                    self?.homeViewModel.album = album
+                    self?.searchViewModel.album = album
+                    self?.album = album
+                }
+            }.store(in: &cancelSet)
+        
+        musicViewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .nextSong:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        self?.playlistViewModel.album = self?.musicViewModel.album
+                        self?.homeViewModel.album = self?.musicViewModel.album
+                        self?.searchViewModel.album = self?.musicViewModel.album
+                        self?.album = self?.musicViewModel.album
+                    }
+                case .previousSong:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        self?.playlistViewModel.album = self?.musicViewModel.album
+                        self?.homeViewModel.album = self?.musicViewModel.album
+                        self?.searchViewModel.album = self?.musicViewModel.album
+                        self?.album = self?.musicViewModel.album
+                    }
+                default:
+                    return
                 }
             }.store(in: &cancelSet)
     }
     
-    func presentMusic(album: Album) {
-        let viewModel = MusicViewModel(album: album)
-        let view = MusicView(viewModel: viewModel)
+    func presentMusic() {
+        let view = MusicView(viewModel: musicViewModel)
         
-        viewModel.onEvent
+        musicViewModel.onEvent
             .sink { [weak self] event in
                 switch event {
                 case .onDismiss:

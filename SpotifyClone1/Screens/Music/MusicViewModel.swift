@@ -26,7 +26,7 @@ class MusicViewModel: ObservableObject {
     @Published var currentMinute = 0 {
         didSet {
             if currentMinute == musicFullSeconds {
-                onEvent.send(.nextSong)
+                shouldRepeat ? resetProgressBar() : onEvent.send(.nextSong)
             }
         }
     }
@@ -47,8 +47,7 @@ class MusicViewModel: ObservableObject {
                 
             switch event {
             case .nextSong:
-                currentMinute = 0
-                progressWidth = 0
+                resetProgressBar()
                 musicFullSeconds = Int.random(in: 120...318)
                 if shouldShuffle {
                     shouldGetRandomAlbum()
@@ -62,8 +61,7 @@ class MusicViewModel: ObservableObject {
                     self.album = albums[self.index]
                 }
             case .previousSong:
-                currentMinute = 0
-                progressWidth = 0
+                resetProgressBar()
                 musicFullSeconds = Int.random(in: 120...318)
                 if shouldShuffle {
                     shouldGetRandomAlbum()
@@ -86,6 +84,11 @@ class MusicViewModel: ObservableObject {
     
     func shouldGetRandomAlbum() {
         album = albums[Int.random(in: 0..<albums.count)]
+    }
+    
+    func resetProgressBar() {
+        currentMinute = 0
+        progressWidth = 0
     }
     
 }

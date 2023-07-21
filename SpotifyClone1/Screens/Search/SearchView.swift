@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+import Combine
 
 struct SearchScreenView: View {
+    
+    @ObservedObject var musicViewModel: MusicViewModel
+    @ObservedObject var viewModel: SearchViewModel
+    
     @State var topGenres: [String] = [
         "Pop",
         "Bollywood"
@@ -27,7 +32,7 @@ struct SearchScreenView: View {
     
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Color.boxgray.ignoresSafeArea()
             
             VStack(alignment: .leading) {
                 navigationTitle
@@ -50,6 +55,15 @@ struct SearchScreenView: View {
             }
             .padding(.all, 14)
         }
+        .overlay(alignment: .bottom) {
+            if viewModel.album != nil {
+                MusicPlayingView(viewModel: musicViewModel,
+                                 album: $viewModel.album,
+                                 passtrough: viewModel.onEvent)
+                .padding(.vertical, 5)
+            }
+        }
+
     }
     
     func genresView(genres: [String]) -> some View {
@@ -108,6 +122,6 @@ struct SearchScreenView: View {
 
 struct SearchScreenView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchScreenView()
+        SearchScreenView(musicViewModel: MusicViewModel(album: albums.first!), viewModel: SearchViewModel())
     }
 }

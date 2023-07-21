@@ -10,9 +10,15 @@ import Combine
 
 class HomeViewModel: ObservableObject {
     let onPresentPlaylist = PassthroughSubject<Playlist, Never>()
+    let onEvent = PassthroughSubject<PlaylistViewModel.Event, Never>()
     
     var cancelSet = Set<AnyCancellable>()
     
-    init() { }
+    @Published var album: Album?
+    @Published var playlist: [Playlist]
+    
+    init(playlist: [Playlist]) {
+        self.playlist = playlist
+    }
     
 }
