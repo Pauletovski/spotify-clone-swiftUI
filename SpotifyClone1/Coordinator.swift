@@ -67,13 +67,35 @@ class Coordinator {
     
     func presentPlaylist(playlist: Playlist) {
         let viewModel = PlaylistViewModel()
-        presentVC(PlaylistView(playlist: playlist, viewModel: viewModel))
+        navigationController.navigationBar.isHidden = true
+        pushVC(PlaylistView(playlist: playlist, viewModel: viewModel))
         
-        viewModel.onDismiss
-            .sink { [weak self] _ in
-                
-                self?.dismiss()
+        viewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .onDismiss:
+                    self?.popVC()
+                case .presentMusicDetails(let album):
+                    self?.presentMusic(album: album)
+                }
             }.store(in: &cancelSet)
+    }
+    
+    func presentMusic(album: Album) {
+        let viewModel = MusicViewModel(album: album)
+        let view = MusicView(viewModel: viewModel)
+        
+        viewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .onDismiss:
+                    self?.dismiss()
+                default:
+                    return
+                }
+            }.store(in: &cancelSet)
+        
+        presentVC(view)
     }
 }
 

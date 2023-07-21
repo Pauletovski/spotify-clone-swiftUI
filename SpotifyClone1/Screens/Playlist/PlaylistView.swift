@@ -12,6 +12,7 @@ struct PlaylistView: View {
     let playlist: Playlist
     
     @ObservedObject var viewModel: PlaylistViewModel
+    @State var index = 0
     
     var body: some View {
         ZStack {
@@ -44,7 +45,7 @@ struct PlaylistView: View {
     
     func song(album: Album) -> some View {
         Button {
-            
+            viewModel.onEvent.send(.presentMusicDetails(album))
         } label: {
             HStack {
                 Image(album.img)
@@ -56,6 +57,7 @@ struct PlaylistView: View {
                         .foregroundStyle(.white)
                         .bold()
                         .font(.system(size: 18))
+                        .lineLimit(1)
                     
                     Text(album.artist)
                         .foregroundStyle(.gray)
@@ -178,7 +180,7 @@ struct PlaylistView: View {
     
     var backButton: some View {
         Button {
-            viewModel.onDismiss.send()
+            viewModel.onEvent.send(.onDismiss)
         } label: {
             HStack {
                 VStack {

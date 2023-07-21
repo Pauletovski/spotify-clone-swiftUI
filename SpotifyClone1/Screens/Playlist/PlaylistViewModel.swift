@@ -9,9 +9,14 @@ import SwiftUI
 import Combine
 
 class PlaylistViewModel: ObservableObject {
+    enum Event {
+        case onDismiss
+        case presentMusicDetails(Album)
+    }
+    
     @Published var isFavorite = false
     
-    let onDismiss = PassthroughSubject<Void, Never>()
+    let onEvent = PassthroughSubject<Event, Never>()
     
     var cancelSet = Set<AnyCancellable>()
     
