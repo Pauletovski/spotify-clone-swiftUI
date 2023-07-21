@@ -19,7 +19,11 @@ class MusicViewModel: ObservableObject {
     @Published var shouldShuffle = false
     @Published var shouldRepeat = false
     @Published var shouldPlay = true
-    @Published var album: Album
+    @Published var album: Album {
+        didSet {
+            index = getAlbumIndex(album: self.album)
+        }
+    }
     @Published var index = 0
     @Published var musicFullSeconds = Int.random(in: 120...318)
     @Published var progressWidth: CGFloat = 0

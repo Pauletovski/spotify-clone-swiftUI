@@ -11,11 +11,25 @@ struct MusicView: View {
     
     @ObservedObject var viewModel: MusicViewModel
     
-    var progressInterval: ClosedRange<Date> {
-         let start = Date()
-         let end = start.addingTimeInterval(216)
-         return start...end
-     }
+    @State var progressY: CGFloat = 0
+    
+    var drag: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                progressY = value.translation.width
+            }
+            .onEnded { value in
+                if progressY > 50 {
+                    viewModel.onEvent.send(.previousSong)
+                }
+                
+                if progressY < -40 {
+                    viewModel.onEvent.send(.nextSong)
+                }
+                
+                progressY = 0
+            }
+    }
     
     var body: some View {
         ZStack {
@@ -25,6 +39,7 @@ struct MusicView: View {
                 buildHeader
                 
                 buildAlbumImage
+                    .gesture(drag)
                 
                 buildAlbumsInfos
                 
@@ -149,6 +164,7 @@ struct MusicView: View {
             .resizable()
             .frame(width: 362, height: 410)
             .padding(.top, 45)
+            .offset(x: progressY)
     }
     
     var buildHeader: some View {

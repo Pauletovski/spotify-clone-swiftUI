@@ -63,7 +63,7 @@ struct PlaylistView: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(album.album)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(album == viewModel.album ? .green : .white)
                         .bold()
                         .font(.system(size: 18))
                         .lineLimit(1)
