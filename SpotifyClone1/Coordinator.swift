@@ -21,6 +21,16 @@ class Coordinator {
                 self?.presentPlaylist(playlist: playlist)
             }.store(in: &cancelSet)
         
+        self.libraryViewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .presentPlaylist(let playlist):
+                    self?.presentPlaylist(playlist: playlist)
+                default:
+                    return
+                }
+            }.store(in: &cancelSet)
+        
         self.homeViewModel.onEvent
             .sink { [weak self] event in
                 switch event {
@@ -32,6 +42,16 @@ class Coordinator {
             }.store(in: &cancelSet)
         
         self.searchViewModel.onEvent
+            .sink { [weak self] event in
+                switch event {
+                case .presentMusicDetails:
+                    self?.presentMusic()
+                default:
+                    return
+                }
+            }.store(in: &cancelSet)
+        
+        self.libraryViewModel.onMusicEvent
             .sink { [weak self] event in
                 switch event {
                 case .presentMusicDetails:
@@ -52,6 +72,7 @@ class Coordinator {
     var playlistViewModel = PlaylistViewModel()
     var searchViewModel = SearchViewModel()
     var musicViewModel = MusicViewModel(album: albums.first!)
+    var libraryViewModel = LibraryViewModel()
     
     func start() {
         let viewModel = LogInPageViewModel()
@@ -82,7 +103,8 @@ class Coordinator {
         let searchViewController = UIHostingController(rootView: SearchScreenView(musicViewModel: musicViewModel,
                                                                                   viewModel: searchViewModel))
         
-        let yourLibraryViewController = UIHostingController(rootView: EmptyView())
+        let yourLibraryViewController = UIHostingController(rootView: LibraryView(musicViewModel: musicViewModel,
+                                                                                  viewModel: libraryViewModel))
         
         homeViewController.tabBarItem = firstTabBarItem
         searchViewController.tabBarItem = secondTabBarItem
@@ -111,6 +133,7 @@ class Coordinator {
                     self?.musicViewModel.album = album
                     self?.homeViewModel.album = album
                     self?.searchViewModel.album = album
+                    self?.libraryViewModel.album = album
                     self?.album = album
                 }
             }.store(in: &cancelSet)
@@ -123,6 +146,7 @@ class Coordinator {
                         self?.playlistViewModel.album = self?.musicViewModel.album
                         self?.homeViewModel.album = self?.musicViewModel.album
                         self?.searchViewModel.album = self?.musicViewModel.album
+                        self?.libraryViewModel.album = self?.musicViewModel.album
                         self?.album = self?.musicViewModel.album
                     }
                 case .previousSong:
@@ -130,6 +154,7 @@ class Coordinator {
                         self?.playlistViewModel.album = self?.musicViewModel.album
                         self?.homeViewModel.album = self?.musicViewModel.album
                         self?.searchViewModel.album = self?.musicViewModel.album
+                        self?.libraryViewModel.album = self?.musicViewModel.album
                         self?.album = self?.musicViewModel.album
                     }
                 default:

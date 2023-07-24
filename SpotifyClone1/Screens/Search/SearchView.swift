@@ -63,7 +63,6 @@ struct SearchScreenView: View {
                 .padding(.vertical, 5)
             }
         }
-
     }
     
     func genresView(genres: [String]) -> some View {
